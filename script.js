@@ -8,7 +8,6 @@ let inputField = document.getElementById("typingInput");
 let timerDisplay = document.getElementById("timer");
 let feedbackDisplay = document.getElementById("feedback");
 let leaderboardContainer = document.getElementById("leaderboard");
-let instructionText = document.getElementById("instruction");
 let gameModeSelector = document.getElementById("gameMode");
 let startButton = document.getElementById("startButton");
 let playArea = document.getElementById("play-area");
@@ -20,26 +19,24 @@ let nicknameInput = document.getElementById("nicknameInput");
 let submitNicknameButton = document.getElementById("submitNickname");
 
 // Enable the start button once a game mode is selected
-gameModeSelector.addEventListener("change", function () {
+function updateStartButtonState() {
     if (gameModeSelector.value !== "") {
-        startButton.disabled = false;  
-        startButton.classList.add("enabled");  
+        startButton.disabled = false;  // Enable the button when a mode is selected
+        startButton.classList.add("enabled");  // Change button color to green
     } else {
-        startButton.disabled = true;  
-        startButton.classList.remove("enabled");  
+        startButton.disabled = true;  // Keep the button disabled if no mode is selected
+        startButton.classList.remove("enabled");  // Revert button color to gray
     }
-});
+}
 
 // Event listener to start the game
 startButton.addEventListener("click", function () {
     updateCorrectText(); // Update the correct text based on selected game mode
-    playArea.style.display = 'block'; 
-    gameModeContainer.style.display = 'none'; 
-    instructionText.style.display = 'none'; 
-    startButton.style.display = 'none'; 
-    typedTextDiv.innerHTML = createGrayText(); 
-    inputField.disabled = false; 
-    inputField.focus(); 
+    playArea.style.display = 'block'; // Show the game area
+    gameModeContainer.style.display = 'none'; // Hide the game mode selection
+    typedTextDiv.innerHTML = createGrayText(); // Display the gray alphabet text initially
+    inputField.disabled = false; // Enable typing input
+    inputField.focus(); // Focus the input field immediately
 });
 
 // Function to create the alphabet in gray
@@ -54,29 +51,33 @@ function createGrayText() {
 // Event listener for typing
 inputField.addEventListener("input", function () {
     if (!isTypingStarted) {
-        startTimer(); 
+        startTimer(); // Start the timer when user starts typing
         isTypingStarted = true;
     }
 
     let typedText = inputField.value;
-    let highlightedText = ''; 
+    let highlightedText = ''; // Initialize highlighted text to hold the colored characters
 
+    // Loop over the typed text to match with the correct text and change color
     for (let i = 0; i < typedText.length; i++) {
         if (typedText[i] === correctText[i]) {
-            highlightedText += `<span class="letter correct">${typedText[i]}</span>`; 
+            highlightedText += `<span class="letter correct">${typedText[i]}</span>`; // Correct letter turns green
         } else {
-            highlightedText += `<span class="letter incorrect">${typedText[i]}</span>`; 
+            highlightedText += `<span class="letter incorrect">${typedText[i]}</span>`; // Incorrect letter turns red
         }
     }
 
-    typedTextDiv.innerHTML = highlightedText + createGrayText().slice(typedText.length); 
+    // Update the display with the correct/incorrect letters
+    typedTextDiv.innerHTML = highlightedText + createGrayText().slice(typedText.length); // Display typed text with colors and remaining gray text
 
+    // Check if the typed text matches the full correct text
     if (typedText === correctText) {
         stopTimer();
         feedbackDisplay.innerHTML = "Correct! Well done!";
-        instructionText.innerHTML = "You can restart the game anytime by pressing Shift + Enter.";
-        restartButton.style.display = 'block'; 
-        nicknameContainer.style.display = 'block'; 
+        restartButton.style.display = 'block'; // Show the restart button
+        
+        // Now, show the nickname input form
+        nicknameContainer.style.display = 'block'; // Show the nickname container
     }
 });
 
@@ -115,25 +116,10 @@ function updateCorrectText() {
     }
 }
 
-// Event listener for the restart button (without reload)
+// Event listener for the restart button
 restartButton.addEventListener("click", function () {
-    resetGame();  
+    location.reload();  // Reload the page, which will reset the game and bring back the game mode selector
 });
-
-function resetGame() {
-    isTypingStarted = false;
-    inputField.value = "";
-    typedTextDiv.innerHTML = "";
-    feedbackDisplay.innerHTML = "";
-    timerDisplay.textContent = "Time: 0.00s";
-    restartButton.style.display = 'none';
-    nicknameContainer.style.display = 'none';
-    instructionText.style.display = 'block';
-    gameModeContainer.style.display = 'block';
-    startButton.style.display = 'block';
-    startButton.disabled = true;
-    startButton.classList.remove("enabled");
-}
 
 // Event listener for the nickname submission
 submitNicknameButton.addEventListener("click", function () {
@@ -145,7 +131,8 @@ submitNicknameButton.addEventListener("click", function () {
 
     let gameMode = gameModeSelector.value;
     let timeTaken = ((new Date() - startTime) / 1000).toFixed(2);
-
+    
+    // Save the user's score to leaderboard
     let score = {
         nickname: nickname,
         time: timeTaken,
@@ -154,14 +141,17 @@ submitNicknameButton.addEventListener("click", function () {
     };
 
     leaderboard.push(score);
-    leaderboard.sort((a, b) => a.time - b.time);
+    leaderboard.sort((a, b) => a.time - b.time);  // Sort by time (ascending)
 
+    // Limit to top 20 leaderboard
     leaderboard = leaderboard.slice(0, 20);
 
+    // Save leaderboard to localStorage
     localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
 
+    // Hide nickname input and restart game
     nicknameContainer.style.display = 'none';
-    updateLeaderboard(); 
+    updateLeaderboard();  // Refresh the leaderboard
 });
 
 // Update leaderboard display
@@ -174,13 +164,14 @@ function updateLeaderboard() {
     });
 }
 
+// Format timestamp to show time like "1 second ago", "1 minute ago", etc.
 function formatTimestamp(timestamp) {
     const diff = new Date() - new Date(timestamp);
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
-    const months = Math.floor(diff / 2628000000);
+    const months = Math.floor(diff / 2628000000); // Roughly 30 days per month
 
     if (months > 0) return `${months} month(s) ago`;
     if (days > 0) return `${days} day(s) ago`;
