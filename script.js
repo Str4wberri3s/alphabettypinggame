@@ -15,6 +15,9 @@ let playArea = document.getElementById("play-area");
 let typedTextDiv = document.getElementById("typedText");
 let restartButton = document.getElementById("restartButton");
 let gameModeContainer = document.getElementById("gameModeSelector");
+let nicknameContainer = document.getElementById("nickname-container");
+let nicknameInput = document.getElementById("nicknameInput");
+let submitNicknameButton = document.getElementById("submitNickname");
 
 // Enable the start button once a game mode is selected
 gameModeSelector.addEventListener("change", function() {
@@ -63,6 +66,9 @@ inputField.addEventListener("input", function () {
         feedbackDisplay.innerHTML = "Correct! Well done!";
         instructionText.innerHTML = "You can restart the game anytime by pressing Shift + Enter.";
         restartButton.style.display = 'block'; // Show the restart button
+        
+        // Now, show the nickname input form
+        nicknameContainer.style.display = 'block'; // Show the nickname container
     }
 });
 
@@ -105,3 +111,65 @@ function updateCorrectText() {
 restartButton.addEventListener("click", function () {
     location.reload();  // Reload the page, which will reset the game and bring back the game mode selector
 });
+
+// Event listener for the nickname submission
+submitNicknameButton.addEventListener("click", function () {
+    let nickname = nicknameInput.value.trim();
+    if (nickname === "") {
+        alert("Please enter a nickname!");
+        return;
+    }
+
+    let gameMode = gameModeSelector.value;
+    let timeTaken = ((new Date() - startTime) / 1000).toFixed(2);
+    
+    // Save the user's score to leaderboard
+    let score = {
+        nickname: nickname,
+        time: timeTaken,
+        gameMode: gameMode,
+        timestamp: new Date().toISOString()
+    };
+
+    leaderboard.push(score);
+    leaderboard.sort((a, b) => a.time - b.time);  // Sort by time (ascending)
+
+    // Limit to top 20 leaderboard
+    leaderboard = leaderboard.slice(0, 20);
+
+    // Save leaderboard to localStorage
+    localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+
+    // Hide nickname input and restart game
+    nicknameContainer.style.display = 'none';
+    updateLeaderboard();  // Refresh the leaderboard
+});
+
+// Update leaderboard display
+function updateLeaderboard() {
+    leaderboardContainer.innerHTML = "";
+    leaderboard.forEach((entry, index) => {
+        let leaderboardEntry = document.createElement("div");
+        leaderboardEntry.textContent = `${index + 1}. ${entry.nickname} - ${entry.time}s - ${entry.gameMode} (${formatTimestamp(entry.timestamp)})`;
+        leaderboardContainer.appendChild(leaderboardEntry);
+    });
+}
+
+// Format timestamp to show time like "1 second ago", "1 minute ago", etc.
+function formatTimestamp(timestamp) {
+    const diff = new Date() - new Date(timestamp);
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    const months = Math.floor(diff / 2628000000); // Roughly 30 days per month
+
+    if (months > 0) return `${months} month(s) ago`;
+    if (days > 0) return `${days} day(s) ago`;
+    if (hours > 0) return `${hours} hour(s) ago`;
+    if (minutes > 0) return `${minutes} minute(s) ago`;
+    return `${seconds} second(s) ago`;
+}
+
+// Initial leaderboard render
+updateLeaderboard();
