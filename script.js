@@ -16,11 +16,12 @@ let typedTextDiv = document.getElementById("typedText");
 let restartButton = document.getElementById("restartButton");
 let gameModeContainer = document.getElementById("gameModeSelector");
 let nicknameContainer = document.getElementById("nickname-container");
+let nicknameInput = document.getElementBy
 let nicknameInput = document.getElementById("nicknameInput");
 let submitNicknameButton = document.getElementById("submitNickname");
 
 // Enable the start button once a game mode is selected
-gameModeSelector.addEventListener("change", function() {
+gameModeSelector.addEventListener("change", function () {
     if (gameModeSelector.value !== "") {
         startButton.disabled = false;  // Enable the button when a mode is selected
         startButton.classList.add("enabled");  // Change button color to green
@@ -38,6 +39,9 @@ startButton.addEventListener("click", function () {
     instructionText.style.display = 'none'; // Hide the instructions
     startButton.style.display = 'none'; // Hide the start button
     typedTextDiv.innerHTML = ''; // Clear the text before starting
+    inputField.disabled = false; // Enable typing input
+    inputField.focus(); // Focus the input field immediately
+    startTimer(); // Start the timer when game begins
 });
 
 // Event listener for typing
@@ -52,7 +56,7 @@ inputField.addEventListener("input", function () {
 
     for (let i = 0; i < typedText.length; i++) {
         if (typedText[i] === correctText[i]) {
-            highlightedText += `<span style="color: black;">${typedText[i]}</span>`; // Correct letter stays black
+            highlightedText += `<span style="color: green;">${typedText[i]}</span>`; // Correct letter turns green
         } else {
             highlightedText += `<span style="color: red;">${typedText[i]}</span>`; // Incorrect letter turns red
         }
