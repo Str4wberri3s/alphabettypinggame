@@ -1,47 +1,48 @@
 /* Style for the typing box */
 #typedText {
-    font-family: 'Courier New', monospace;
-    font-size: 18px;
-    color: gray;
-    padding: 10px;
-    margin-top: 20px;
-    width: 80%;
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    word-wrap: normal;
+    font-family: 'Courier New', monospace; /* Monospace font for a typewriter-like effect */
+    font-size: 18px; /* Text size */
+    color: gray; /* Initial color for the text */
+    padding: 10px; /* Padding inside the box */
+    margin-top: 20px; /* Space above the box */
+    width: 80%; /* Width of the box relative to its container */
+    display: inline-block; /* Allows the text to behave like an inline element */
+    white-space: nowrap; /* Prevents text from wrapping to the next line */
+    overflow: hidden; /* Hides text that overflows the container */
+    word-wrap: normal; /* Prevents word wrapping */
 }
 
 /* Center the timer text */
 #timer {
-    font-size: 24px;
-    color: gray;
-    text-align: center;
-    margin-top: 20px;
+    font-size: 24px; /* Larger font size for the timer */
+    color: gray; /* Timer color */
+    text-align: center; /* Centers the timer text */
+    margin-top: 20px; /* Space above the timer */
 }
 
 /* Style for the textarea */
 #typingInput {
-    font-size: 18px;
-    padding: 10px;
-    width: 80%;
-    margin-top: 20px;
-    resize: none;
-    display: block;
-    margin: 0 auto;
+    font-size: 18px; /* Text size for user input */
+    padding: 10px; /* Padding inside the textarea */
+    width: 80%; /* Width of the textarea */
+    margin-top: 20px; /* Space above the textarea */
+    resize: none; /* Disables resizing of the textarea */
+    display: block; /* Makes the textarea a block element */
+    margin: 0 auto; /* Centers the textarea */
 }
 
 /* Add a style for the green and red text (for correct and incorrect letters) */
 .correct {
-    color: green;
+    color: green; /* Green color for correct letters */
 }
 
 .incorrect {
-    color: red;
+    color: red; /* Red color for incorrect letters */
 }
 
+/* Style for each letter */
 .letter {
-    display: inline-block;
-    width: 20px;  /* Adjust this value to make sure letters fit */
-    text-align: center;
+    display: inline-block; /* Makes each letter behave like an inline element */
+    width: 20px; /* Fixed width for each letter to ensure even spacing */
+    text-align: center; /* Centers each letter within its block */
 }

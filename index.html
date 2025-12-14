@@ -4,55 +4,337 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Typing Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        /* Center the game area */
+        #play-area {
+            text-align: center;
+            display: none; /* Hidden until the game starts */
+        }
+
+        #timer {
+            font-size: 24px;
+            color: gray;
+            margin-top: 20px;
+        }
+
+        #typedText {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: gray;
+            padding: 10px;
+            margin-top: 20px;
+            width: 80%;
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            word-wrap: normal;
+        }
+
+        #typingInput {
+            font-size: 18px;
+            padding: 10px;
+            width: 80%;
+            margin-top: 20px;
+            resize: none;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+
+        .letter {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button.enabled {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        #gameModeSelector {
+            margin: 20px;
+        }
+
+        #nickname-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #leaderboard {
+            margin-top: 30px;
+            width: 80%;
+            text-align: left;
+            font-size: 16px;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+
+        #instruction {
+            margin-top: 20px;
+        }
+
+        #restartButton {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="game-container">
-        <h1>Typing Game</h1>
-        <p id="instruction">Select a game mode and start typing!</p>
+    <h1>Typing Game</h1>
 
-        <!-- Game Mode Selector -->
-        <div id="gameModeSelector">
-            <label for="gameMode">Select Game Mode:</label>
-            <select id="gameMode">
-                <option value="" disabled selected>Select a game mode</option>
-                <option value="classic">Classic Mode (ABC without spaces)</option>
-                <option value="spaces">With Spaces Mode (ABC with spaces)</option>
-                <option value="backwards">Backwards Mode (ZYX without spaces)</option>
-                <option value="backwards-spaces">Backwards with Spaces Mode (ZYX with spaces)</option>
-            </select>
-            <button id="startButton" disabled>Start Game</button>
-        </div>
+    <div id="instruction">Select a game mode and start typing!</div>
 
-        <!-- Game Area (Hidden until the game starts) -->
-        <div id="play-area" style="display: none;">
-            <div id="typedText">Start typing...</div>
-            <input type="text" id="typingInput" placeholder="Start typing..." autofocus disabled>
-            <p id="timer">Time: 0.00s</p>
-            <p id="feedback"></p>
-            <button id="restartButton" style="display: none;">Back to Menu</button> <!-- Button to go back to menu -->
-        </div>
-
-        <!-- Nickname Input (Hidden until game ends) -->
-        <div id="nickname-container" style="display: none;">
-            <h2>Enter Your Nickname</h2>
-            <input type="text" id="nicknameInput" placeholder="Enter your nickname" autofocus>
-            <button id="submitNickname">Submit</button>
-        </div>
-
-        <!-- Leaderboard -->
-        <div id="leaderboard-container">
-            <h2>Leaderboard</h2>
-            <div id="leaderboard">
-                <!-- Top 20 leaderboard will go here -->
-            </div>
-        </div>
+    <!-- Game Mode Selector -->
+    <div id="gameModeSelector">
+        <select id="gameMode">
+            <option value="">Select Game Mode</option>
+            <option value="classic">Classic (No spaces)</option>
+            <option value="spaces">With Spaces</option>
+            <option value="backwards">Backwards</option>
+            <option value="backwards-spaces">Backwards with Spaces</option>
+        </select>
+        <button id="startButton" disabled>Start Game</button>
     </div>
 
-    <footer>
-        <p>Designed by Ziyad Malik</p>
-    </footer>
+    <!-- Game area -->
+    <div id="play-area">
+        <div id="timer">Time: 0.00s</div>
+        <div id="typedText"></div>
+        <textarea id="typingInput" placeholder="Start typing..." disabled></textarea>
+        <div id="feedback"></div>
+        <button id="restartButton">Restart Game</button>
+    </div>
 
-    <script src="script.js"></script>
+    <!-- Nickname Form -->
+    <div id="nickname-container">
+        <input type="text" id="nicknameInput" placeholder="Enter your nickname" />
+        <button id="submitNickname">Submit</button>
+    </div>
+
+    <!-- Leaderboard -->
+    <div id="leaderboard">
+        <h3>Leaderboard</h3>
+    </div>
+
+    <script>
+        // Initialize variables
+        let startTime, endTime;
+        let isTypingStarted = false;
+        let correctText = "";
+        let timerInterval;
+        let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+        let inputField = document.getElementById("typingInput");
+        let timerDisplay = document.getElementById("timer");
+        let feedbackDisplay = document.getElementById("feedback");
+        let leaderboardContainer = document.getElementById("leaderboard");
+        let instructionText = document.getElementById("instruction");
+        let gameModeSelector = document.getElementById("gameMode");
+        let startButton = document.getElementById("startButton");
+        let playArea = document.getElementById("play-area");
+        let typedTextDiv = document.getElementById("typedText");
+        let restartButton = document.getElementById("restartButton");
+        let gameModeContainer = document.getElementById("gameModeSelector");
+        let nicknameContainer = document.getElementById("nickname-container");
+        let nicknameInput = document.getElementById("nicknameInput");
+        let submitNicknameButton = document.getElementById("submitNickname");
+
+        // Enable the start button once a game mode is selected
+        gameModeSelector.addEventListener("change", function () {
+            if (gameModeSelector.value !== "") {
+                startButton.disabled = false;  
+                startButton.classList.add("enabled");  
+            } else {
+                startButton.disabled = true;  
+                startButton.classList.remove("enabled");  
+            }
+        });
+
+        // Event listener to start the game
+        startButton.addEventListener("click", function () {
+            updateCorrectText(); // Update the correct text based on selected game mode
+            playArea.style.display = 'block'; 
+            gameModeContainer.style.display = 'none'; 
+            instructionText.style.display = 'none'; 
+            startButton.style.display = 'none'; 
+            typedTextDiv.innerHTML = createGrayText(); 
+            inputField.disabled = false; 
+            inputField.focus(); 
+        });
+
+        // Function to create the alphabet in gray
+        function createGrayText() {
+            let grayText = "";
+            for (let i = 0; i < correctText.length; i++) {
+                grayText += `<span class="letter" style="color: gray;">${correctText[i]}</span>`;
+            }
+            return grayText;
+        }
+
+        // Event listener for typing
+        inputField.addEventListener("input", function () {
+            if (!isTypingStarted) {
+                startTimer(); 
+                isTypingStarted = true;
+            }
+
+            let typedText = inputField.value;
+            let highlightedText = ''; 
+
+            for (let i = 0; i < typedText.length; i++) {
+                if (typedText[i] === correctText[i]) {
+                    highlightedText += `<span class="letter correct">${typedText[i]}</span>`; 
+                } else {
+                    highlightedText += `<span class="letter incorrect">${typedText[i]}</span>`; 
+                }
+            }
+
+            typedTextDiv.innerHTML = highlightedText + createGrayText().slice(typedText.length); 
+
+            if (typedText === correctText) {
+                stopTimer();
+                feedbackDisplay.innerHTML = "Correct! Well done!";
+                instructionText.innerHTML = "You can restart the game anytime by pressing Shift + Enter.";
+                restartButton.style.display = 'block'; 
+                nicknameContainer.style.display = 'block'; 
+            }
+        });
+
+        // Timer functions
+        function startTimer() {
+            startTime = new Date();
+            timerInterval = setInterval(updateTimer, 100);
+        }
+
+        function updateTimer() {
+            let elapsedTime = ((new Date() - startTime) / 1000).toFixed(2);
+            timerDisplay.textContent = "Time: " + elapsedTime + "s";
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function updateCorrectText() {
+            let gameMode = gameModeSelector.value;
+            switch (gameMode) {
+                case 'classic':
+                    correctText = "abcdefghijklmnopqrstuvwxyz";
+                    break;
+                case 'spaces':
+                    correctText = "a b c d e f g h i j k l m n o p q r s t u v w x y z";
+                    break;
+                case 'backwards':
+                    correctText = "zyxwvutsrqponmlkjihgfedcba";
+                    break;
+                case 'backwards-spaces':
+                    correctText = "z y x w v u t s r q p o n m l k j i h g f e d c b a";
+                    break;
+                default:
+                    correctText = "";
+            }
+        }
+
+        // Event listener for the restart button (without reload)
+        restartButton.addEventListener("click", function () {
+            resetGame();  
+        });
+
+        function resetGame() {
+            isTypingStarted = false;
+            inputField.value = "";
+            typedTextDiv.innerHTML = "";
+            feedbackDisplay.innerHTML = "";
+            timerDisplay.textContent = "Time: 0.00s";
+            restartButton.style.display = 'none';
+            nicknameContainer.style.display = 'none';
+            instructionText.style.display = 'block';
+            gameModeContainer.style.display = 'block';
+            startButton.style.display = 'block';
+            startButton.disabled = true;
+            startButton.classList.remove("enabled");
+        }
+
+        // Event listener for the nickname submission
+        submitNicknameButton.addEventListener("click", function () {
+            let nickname = nicknameInput.value.trim();
+            if (nickname === "") {
+                alert("Please enter a nickname!");
+                return;
+            }
+
+            let gameMode = gameModeSelector.value;
+            let timeTaken = ((new Date() - startTime) / 1000).toFixed(2);
+
+            let score = {
+                nickname: nickname,
+                time: timeTaken,
+                gameMode: gameMode,
+                timestamp: new Date().toISOString()
+            };
+
+            leaderboard.push(score);
+            leaderboard.sort((a, b) => a.time - b.time);
+
+            leaderboard = leaderboard.slice(0, 20);
+
+            localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+
+            nicknameContainer.style.display = 'none';
+            updateLeaderboard(); 
+        });
+
+        // Update leaderboard display
+        function updateLeaderboard() {
+            leaderboardContainer.innerHTML = "<h3>Leaderboard</h3>";
+            leaderboard.forEach((entry, index) => {
+                let leaderboardEntry = document.createElement("div");
+                leaderboardEntry.textContent = `${index + 1}. ${entry.nickname} - ${entry.time}s - ${entry.gameMode} (${formatTimestamp(entry.timestamp)})`;
+                leaderboardContainer.appendChild(leaderboardEntry);
+            });
+        }
+
+        function formatTimestamp(timestamp) {
+            const diff = new Date() - new Date(timestamp);
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            const months = Math.floor(diff / 2628000000);
+
+            if (months > 0) return `${months} month(s) ago`;
+            if (days > 0) return `${days} day(s) ago`;
+            if (hours > 0) return `${hours} hour(s) ago`;
+            if (minutes > 0) return `${minutes} minute(s) ago`;
+            return `${seconds} second(s) ago`;
+        }
+
+        // Initial leaderboard render
+        updateLeaderboard();
+    </script>
 </body>
 </html>
