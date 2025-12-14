@@ -74,4 +74,26 @@ function updateTimer() {
     timerDisplay.textContent = "Time: " + elapsedTime + "s";
 }
 
-function stopTimer
+function stopTimer() {
+    clearInterval(timerInterval);
+}
+
+function updateCorrectText() {
+    let gameMode = gameModeSelector.value;
+    switch (gameMode) {
+        case 'classic':
+            correctText = "abcdefghijklmnopqrstuvwxyz";
+            break;
+        case 'spaces':
+            correctText = "a b c d e f g h i j k l m n o p q r s t u v w x y z";
+            break;
+        case 'backwards':
+            correctText = "zyxwvutsrqponmlkjihgfedcba";
+            break;
+        case 'backwards-spaces':
+            correctText = "z y x w v u t s r q p o n m l k j i h g f e d c b a";
+            break;
+        default:
+            correctText = "";
+    }
+}
