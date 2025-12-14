@@ -26,6 +26,7 @@ h1 {
     justify-content: space-between;
     width: 80%;
     max-width: 1200px;
+    gap: 40px; /* Added space between game box and leaderboard */
 }
 
 #play-area {
@@ -87,4 +88,22 @@ footer {
 
 footer p {
     margin: 0;
+}
+
+#gameModeSelector {
+    margin-bottom: 30px;
+}
+
+#startButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#startButton:hover {
+    background-color: #218838;
 }

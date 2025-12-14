@@ -9,7 +9,7 @@
 <body>
     <div class="game-container">
         <h1>Typing Game</h1>
-        <p id="instruction">Type the alphabet as quickly as possible! <br> You can restart the game anytime by pressing Shift + Enter.</p>
+        <p id="instruction">Select a game mode and start typing!</p>
 
         <!-- Game Mode Selector -->
         <div id="gameModeSelector">
@@ -20,9 +20,10 @@
                 <option value="backwards">Backwards Mode (ZYX without spaces)</option>
                 <option value="backwards-spaces">Backwards with Spaces Mode (ZYX with spaces)</option>
             </select>
+            <button id="startButton">Start Game</button>
         </div>
 
-        <div id="play-area">
+        <div id="play-area" style="display: none;">
             <input type="text" id="typingInput" placeholder="Start typing..." autofocus>
             <p id="timer">Time: 0.00s</p>
             <p id="feedback"></p>
