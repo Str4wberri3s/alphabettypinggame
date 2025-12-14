@@ -1,4 +1,4 @@
-// Initialize variables (Ensure no duplicate declarations)
+// Initialize variables
 let startTime, endTime;
 let isTypingStarted = false;
 let correctText = "";
@@ -37,31 +37,40 @@ startButton.addEventListener("click", function () {
     gameModeContainer.style.display = 'none'; // Hide the game mode selection
     instructionText.style.display = 'none'; // Hide the instructions
     startButton.style.display = 'none'; // Hide the start button
-    typedTextDiv.innerHTML = ''; // Clear the text before starting
+    typedTextDiv.innerHTML = createGrayText(); // Display the gray alphabet text initially
     inputField.disabled = false; // Enable typing input
     inputField.focus(); // Focus the input field immediately
-    startTimer(); // Start the timer when game begins
 });
+
+// Function to create the alphabet in gray
+function createGrayText() {
+    let grayText = "";
+    for (let i = 0; i < correctText.length; i++) {
+        grayText += `<span class="letter" style="color: gray;">${correctText[i]}</span>`;
+    }
+    return grayText;
+}
 
 // Event listener for typing
 inputField.addEventListener("input", function () {
     if (!isTypingStarted) {
-        startTimer();
+        startTimer(); // Start the timer when user starts typing
         isTypingStarted = true;
     }
 
     let typedText = inputField.value;
     let highlightedText = ''; // Initialize highlighted text to hold the colored characters
 
+    // Loop over the typed text to match with the correct text and change color
     for (let i = 0; i < typedText.length; i++) {
         if (typedText[i] === correctText[i]) {
-            highlightedText += `<span style="color: green;">${typedText[i]}</span>`; // Correct letter turns green
+            highlightedText += `<span class="letter" style="color: green;">${typedText[i]}</span>`; // Correct letter turns green
         } else {
-            highlightedText += `<span style="color: red;">${typedText[i]}</span>`; // Incorrect letter turns red
+            highlightedText += `<span class="letter" style="color: red;">${typedText[i]}</span>`; // Incorrect letter turns red
         }
     }
 
-    typedTextDiv.innerHTML = highlightedText; // Display highlighted text in the div
+    typedTextDiv.innerHTML = highlightedText + createGrayText().slice(typedText.length); // Display typed text with colors and remaining gray text
 
     // Check if the typed text matches the full correct text
     if (typedText === correctText) {
