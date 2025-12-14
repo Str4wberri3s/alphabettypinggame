@@ -116,4 +116,48 @@ function displayLeaderboard() {
     leaderboardContainer.innerHTML = '';
     leaderboard.forEach(entry => {
         let div = document.createElement('div');
-        div.innerHTML = `${entry.nickname} | ${entry.time.toFixed(2)}s
+        div.innerHTML = `${entry.nickname} | ${entry.time.toFixed(2)}s | ${entry.gameMode} | ${entry.timestamp}`;
+        leaderboardContainer.appendChild(div);
+    });
+}
+
+// Game mode selection
+function getSelectedGameMode() {
+    return gameModeSelector.value; // Get the selected game mode
+}
+
+// Adjust correct text based on selected game mode
+function updateCorrectText() {
+    let mode = gameModeSelector.value;
+
+    if (mode === "classic") {
+        correctText = "abcdefghijklmnopqrstuvwxyz";
+    } else if (mode === "spaces") {
+        correctText = "a b c d e f g h i j k l m n o p q r s t u v w x y z";
+    } else if (mode === "backwards") {
+        correctText = "zyxwvutsrqponmlkjihgfedcba";
+    } else if (mode === "backwards-spaces") {
+        correctText = "z y x w v u t s r q p o n m l k j i h g f e d c b a";
+    }
+}
+
+// Display leaderboard on load
+displayLeaderboard();
+
+// Restart game functionality using Shift + Enter
+document.addEventListener('keydown', function (event) {
+    if (event.shiftKey && event.key === 'Enter') {
+        resetGame();
+    }
+});
+
+// Reset the game
+function resetGame() {
+    inputField.value = '';
+    feedbackDisplay.innerHTML = '';
+    timerDisplay.textContent = "Time: 0.00s";
+    instructionText.innerHTML = "Select a game mode and start typing!";
+    instructionText.style.display = 'block';
+    playArea.style.display = 'none';
+    startButton.style.display = 'inline-block';
+    startButton.disabled = true; // Disable button
