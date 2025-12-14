@@ -1,182 +1,47 @@
-/* General styling */
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-    margin: 0;
-    text-align: center;
-    flex-direction: column;
-}
-
-h1 {
-    margin-bottom: 20px;
-}
-
-#instruction {
-    font-size: 18px;
-    color: #555;
-    margin-bottom: 30px;
-}
-
-.game-container {
-    display: flex;
-    justify-content: space-between;
-    width: 80%;
-    max-width: 1200px;
-    gap: 40px;
-}
-
-#play-area {
-    background-color: #007bff; /* Blue background for the game area */
-    padding: 20px;
-    width: 60%;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: relative;
-    text-align: left;
-}
-
-input {
-    padding: 12px;
-    font-size: 18px;
-    width: 100%;
-    margin-top: 10px; /* Add space from the top */
-    margin-bottom: 20px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    color: #ccc; /* Initial text color in the input is light gray */
-    background-color: #fff;
-    text-align: center; /* Make the text aligned to the center initially */
-    pointer-events: none; /* Disable clicks on the typing box */
-}
-
+/* Style for the typing box */
 #typedText {
-    color: #ccc; /* Initially gray text */
+    font-family: 'Courier New', monospace;
     font-size: 18px;
-    margin-bottom: 20px;
+    color: gray;
+    padding: 10px;
+    margin-top: 20px;
+    width: 80%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    word-wrap: normal;
 }
 
+/* Center the timer text */
 #timer {
-    font-size: 20px;
-    font-weight: bold;
-    color: white;
-}
-
-#feedback {
-    margin-top: 20px;
-    font-size: 18px;
-    color: white;
-}
-
-#leaderboard-container {
-    width: 35%;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-#leaderboard {
-    margin-top: 20px;
-    height: 400px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    padding: 10px;
-}
-
-#leaderboard div {
-    padding: 8px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-footer {
-    margin-top: 30px;
-    font-size: 14px;
-    color: #888;
-}
-
-footer p {
-    margin: 0;
-}
-
-#gameModeSelector {
-    margin-bottom: 30px;
-}
-
-#gameMode {
-    padding: 10px;
-    font-size: 16px;
-    margin-right: 20px;
-}
-
-#startButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: gray;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: not-allowed;
-    transition: background-color 0.3s;
-}
-
-#startButton:hover {
-    background-color: darkgray;
-}
-
-#startButton.enabled {
-    background-color: #28a745;
-    cursor: pointer;
-}
-
-#startButton.enabled:hover {
-    background-color: #218838;
-}
-
-#restartButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#restartButton:hover {
-    background-color: #218838;
-}
-
-#nickname-container {
+    font-size: 24px;
+    color: gray;
     text-align: center;
     margin-top: 20px;
 }
 
-#nicknameInput {
-    padding: 10px;
+/* Style for the textarea */
+#typingInput {
     font-size: 18px;
-    margin-top: 10px;
-    width: 200px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
+    padding: 10px;
+    width: 80%;
+    margin-top: 20px;
+    resize: none;
+    display: block;
+    margin: 0 auto;
 }
 
-#submitNickname {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
+/* Add a style for the green and red text (for correct and incorrect letters) */
+.correct {
+    color: green;
 }
 
-#submitNickname:hover {
-    background-color: #218838;
+.incorrect {
+    color: red;
+}
+
+.letter {
+    display: inline-block;
+    width: 20px;  /* Adjust this value to make sure letters fit */
+    text-align: center;
 }
