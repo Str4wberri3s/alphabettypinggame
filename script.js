@@ -1,7 +1,7 @@
 // Initialize variables
 let startTime, endTime;
 let isTypingStarted = false;
-let correctText = "abcdefghijklmnopqrstuvwxyz";
+let correctText = "";
 let timerInterval;
 let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
 let inputField = document.getElementById("typingInput");
@@ -9,7 +9,7 @@ let timerDisplay = document.getElementById("timer");
 let feedbackDisplay = document.getElementById("feedback");
 let leaderboardContainer = document.getElementById("leaderboard");
 let instructionText = document.getElementById("instruction");
-let resetButton = document.getElementById("resetButton");
+let gameModeSelector = document.getElementById("gameMode");
 
 // Event listener to start the game
 inputField.addEventListener("input", function () {
@@ -108,7 +108,22 @@ function displayLeaderboard() {
 
 // Game mode selection
 function getSelectedGameMode() {
-    return "Classic Mode"; // Since we only have one game mode for now
+    return gameModeSelector.value; // Get the selected game mode
+}
+
+// Adjust correct text based on selected game mode
+function updateCorrectText() {
+    let mode = gameModeSelector.value;
+
+    if (mode === "classic") {
+        correctText = "abcdefghijklmnopqrstuvwxyz";
+    } else if (mode === "spaces") {
+        correctText = "a b c d e f g h i j k l m n o p q r s t u v w x y z";
+    } else if (mode === "backwards") {
+        correctText = "zyxwvutsrqponmlkjihgfedcba";
+    } else if (mode === "backwards-spaces") {
+        correctText = "z y x w v u t s r q p o n m l k j i h g f e d c b a";
+    }
 }
 
 // Display leaderboard on load
@@ -128,5 +143,9 @@ function resetGame() {
     timerDisplay.textContent = "Time: 0.00s";
     instructionText.innerHTML = "Type the alphabet as quickly as possible! <br> You can restart the game anytime by pressing Shift + Enter.";
     isTypingStarted = false;
+    updateCorrectText(); // Update the correct text for the selected game mode
     displayLeaderboard();
 }
+
+// Initialize the game
+updateCorrectText(); // Set the initial game mode to classic
