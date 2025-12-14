@@ -1,4 +1,4 @@
-/* Save this as styles.css */
+/* General styling */
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -6,18 +6,40 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #f0f0f0;
-    flex-direction: column;
+    margin: 0;
     text-align: center;
+    flex-direction: column;
 }
 
 h1 {
     margin-bottom: 20px;
 }
 
+#instruction {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.game-container {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 1200px;
+}
+
+#play-area {
+    background-color: #007bff; /* Blue background for the game area */
+    padding: 20px;
+    width: 60%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 input {
     padding: 10px;
     font-size: 18px;
-    width: 300px;
+    width: 100%;
     margin-bottom: 20px;
     border: 2px solid #ccc;
     border-radius: 5px;
@@ -26,23 +48,43 @@ input {
 #timer {
     font-size: 20px;
     font-weight: bold;
+    color: white;
 }
 
 #feedback {
     margin-top: 20px;
     font-size: 18px;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    background-color: #4CAF50;
     color: white;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
-button:hover {
-    background-color: #45a049;
+#leaderboard-container {
+    width: 35%;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#leaderboard {
+    margin-top: 20px;
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+#leaderboard div {
+    padding: 8px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+footer {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #888;
+}
+
+footer p {
+    margin: 0;
 }

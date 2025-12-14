@@ -1,4 +1,3 @@
-<!-- Save this as index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,16 +7,27 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="game-container">
+        <h1>Typing Game</h1>
+        <p id="instruction">Type the alphabet as quickly as possible! <br> You can restart the game anytime by pressing Shift + Enter.</p>
 
-    <h1>Typing Game</h1>
-    <p id="instruction">Type the alphabet (without spaces):</p>
-    
-    <input type="text" id="typingInput" placeholder="Start typing..." autofocus>
+        <div id="play-area">
+            <input type="text" id="typingInput" placeholder="Start typing..." autofocus>
+            <p id="timer">Time: 0.00s</p>
+            <p id="feedback"></p>
+        </div>
 
-    <p id="timer">Time: 0.00s</p>
-    <p id="feedback"></p>
+        <div id="leaderboard-container">
+            <h2>Leaderboard</h2>
+            <div id="leaderboard">
+                <!-- Top 20 leaderboard will go here -->
+            </div>
+        </div>
+    </div>
 
-    <button id="resetButton" style="display: none;" onclick="resetGame()">Play Again</button>
+    <footer>
+        <p>Designed by Ziyad Malik</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
