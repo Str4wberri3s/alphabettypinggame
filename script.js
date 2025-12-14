@@ -1,4 +1,4 @@
-// Initialize variables
+// Initialize variables (Ensure no duplicate declarations)
 let startTime, endTime;
 let isTypingStarted = false;
 let correctText = "";
@@ -16,8 +16,7 @@ let typedTextDiv = document.getElementById("typedText");
 let restartButton = document.getElementById("restartButton");
 let gameModeContainer = document.getElementById("gameModeSelector");
 let nicknameContainer = document.getElementById("nickname-container");
-let nicknameInput = document.getElementBy
-let nicknameInput = document.getElementById("nicknameInput");
+let nicknameInput = document.getElementById("nicknameInput"); // Declare nicknameInput only once
 let submitNicknameButton = document.getElementById("submitNickname");
 
 // Enable the start button once a game mode is selected
