@@ -13,6 +13,11 @@ let gameModeSelector = document.getElementById("gameMode");
 let startButton = document.getElementById("startButton");
 let playArea = document.getElementById("play-area");
 
+// Enable the start button once a game mode is selected
+gameModeSelector.addEventListener("change", function() {
+    startButton.disabled = false;  // Enable the button when a mode is selected
+});
+
 // Event listener to start the game
 startButton.addEventListener("click", function () {
     updateCorrectText(); // Update the correct text based on selected game mode
@@ -83,3 +88,32 @@ function promptForNickname() {
 
         leaderboard.push(newEntry);
         leaderboard.sort((a, b) => a.time - b.time); // Sort by fastest time
+        if (leaderboard.length > 20) leaderboard.pop(); // Keep only top 20
+
+        localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+        displayLeaderboard();
+    }
+}
+
+// Format timestamp to relative time
+function formatTimestamp(date) {
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+    const diffInMonths = Math.floor(diffInDays / 30);
+
+    if (diffInSeconds < 60) return `${diffInSeconds} second${diffInSeconds === 1 ? '' : 's'} ago`;
+    if (diffInMinutes < 60) return `${diffInMinutes} minute${diffInMinutes === 1 ? '' : 's'} ago`;
+    if (diffInHours < 24) return `${diffInHours} hour${diffInHours === 1 ? '' : 's'} ago`;
+    if (diffInDays < 30) return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
+    return `${diffInMonths} month${diffInMonths === 1 ? '' : 's'} ago`;
+}
+
+// Display the leaderboard
+function displayLeaderboard() {
+    leaderboardContainer.innerHTML = '';
+    leaderboard.forEach(entry => {
+        let div = document.createElement('div');
+        div.innerHTML = `${entry.nickname} | ${entry.time.toFixed(2)}s
