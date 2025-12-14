@@ -13,6 +13,8 @@ let gameModeSelector = document.getElementById("gameMode");
 let startButton = document.getElementById("startButton");
 let playArea = document.getElementById("play-area");
 let typedTextDiv = document.getElementById("typedText");
+let restartButton = document.getElementById("restartButton");
+let gameModeContainer = document.getElementById("gameModeSelector");
 
 // Enable the start button once a game mode is selected
 gameModeSelector.addEventListener("change", function() {
@@ -29,8 +31,9 @@ gameModeSelector.addEventListener("change", function() {
 startButton.addEventListener("click", function () {
     updateCorrectText(); // Update the correct text based on selected game mode
     playArea.style.display = 'block'; // Show the game area
+    gameModeContainer.style.display = 'none'; // Hide the game mode selection
     instructionText.style.display = 'none'; // Hide the instructions
-    startButton.style.display = 'none'; // Hide the start button and game mode selection
+    startButton.style.display = 'none'; // Hide the start button
     typedTextDiv.innerHTML = ''; // Clear the text before starting
 });
 
@@ -59,7 +62,7 @@ inputField.addEventListener("input", function () {
         stopTimer();
         feedbackDisplay.innerHTML = "Correct! Well done!";
         instructionText.innerHTML = "You can restart the game anytime by pressing Shift + Enter.";
-        promptForNickname();
+        restartButton.style.display = 'block'; // Show the restart button
     }
 });
 
@@ -97,3 +100,8 @@ function updateCorrectText() {
             correctText = "";
     }
 }
+
+// Event listener for the restart button
+restartButton.addEventListener("click", function () {
+    location.reload();  // Reload the page, which will reset the game and bring back the game mode selector
+});
