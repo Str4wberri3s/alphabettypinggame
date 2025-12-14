@@ -16,7 +16,13 @@ let typedTextDiv = document.getElementById("typedText");
 
 // Enable the start button once a game mode is selected
 gameModeSelector.addEventListener("change", function() {
-    startButton.disabled = false;  // Enable the button when a mode is selected
+    if (gameModeSelector.value !== "") {
+        startButton.disabled = false;  // Enable the button when a mode is selected
+        startButton.classList.add("enabled");  // Change button color to green
+    } else {
+        startButton.disabled = true;  // Keep the button disabled if no mode is selected
+        startButton.classList.remove("enabled");  // Revert button color to gray
+    }
 });
 
 // Event listener to start the game
@@ -68,18 +74,4 @@ function updateTimer() {
     timerDisplay.textContent = "Time: " + elapsedTime + "s";
 }
 
-function stopTimer() {
-    clearInterval(timerInterval);
-}
-
-// Handle nickname input
-function promptForNickname() {
-    let nickname = prompt("Enter your nickname:");
-
-    if (nickname) {
-        let timeTaken = parseFloat(timerDisplay.textContent.replace('Time: ', '').replace('s', ''));
-        let gameMode = getSelectedGameMode();
-        let timestamp = formatTimestamp(new Date());
-
-        let newEntry = {
-            nickname,
+function stopTimer
