@@ -9,7 +9,7 @@
 <body>
     <div class="game-container">
         <h1>Typing Game</h1>
-        <p id="instruction">Select a game mode and click "Start Game" to begin typing!</p>
+        <p id="instruction">Select a game mode and start typing!</p>
 
         <!-- Game Mode Selector -->
         <div id="gameModeSelector">
@@ -27,7 +27,7 @@
         <!-- Game Area (Hidden until the game starts) -->
         <div id="play-area" style="display: none;">
             <div id="typedText">Start typing...</div>
-            <input type="text" id="typingInput" placeholder="Start typing..." autofocus>
+            <input type="text" id="typingInput" placeholder="Start typing..." autofocus disabled>
             <p id="timer">Time: 0.00s</p>
             <p id="feedback"></p>
             <button id="restartButton" style="display: none;">Back to Menu</button> <!-- Button to go back to menu -->
